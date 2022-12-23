@@ -3,6 +3,7 @@ package core;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
+import io.restassured.authentication.AuthenticationScheme;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -13,17 +14,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Request {
-    private static final String BASE_URI = "https://api.inv.bg"; //localhost
-    private static final String BASE_PATH = "/v3"; //v4
+    private static final String BASE_URI = System.getProperty("baseUri","https://api.inv.bg");
+    private static final String BASE_PATH =System.getProperty("basePath", "/v3");
     protected static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static Logger logger = LoggerFactory.getLogger("NoFrameworkTest.class");
     private String token;
 
-    public Request (String token){
+    public Request(String token) {
         this.token = token;
     }
 
-    protected RequestSpecification baseRequest(){
+    public Request(AuthenticationScheme scheme, String basicUri, String basePath) {
+
+    }
+
+
+    protected RequestSpecification baseRequest() {
         return RestAssured.given()
                 .baseUri(BASE_URI)
                 .basePath(BASE_PATH)
@@ -35,26 +41,26 @@ public abstract class Request {
                 .when();
     }
 
-    protected Response get(String resource, Map<String, ?> queryParams){
+    protected Response get(String resource, Map<String, ?> queryParams) {
         return baseRequest()
                 .queryParams(queryParams)
                 .get(resource)
                 .prettyPeek();
     }
 
-    protected Response get(String resource){
+    protected Response get(String resource) {
         return baseRequest()
                 .get(resource)
                 .prettyPeek();
     }
 
-    protected Response delete(String resource){
+    protected Response delete(String resource) {
         return baseRequest()
                 .delete(resource)
                 .prettyPeek();
     }
 
-    protected Response post(String resource, String body, Map<String, ?> queryParams){
+    protected Response post(String resource, String body, Map<String, ?> queryParams) {
         return baseRequest()
                 .queryParams(queryParams)
                 .body(body)
@@ -62,19 +68,19 @@ public abstract class Request {
                 .prettyPeek();
     }
 
-    protected Response patch(String resource, String body, Map<String, ?> queryParams){
+    protected Response patch(String resource, String body, Map<String, ?> queryParams) {
         return baseRequest()
                 .queryParams(queryParams)
                 .body(body)
-                .put(resource)
+                .patch(resource)
                 .prettyPeek();
     }
 
-    protected Response post(String resource, String body){
+    protected Response post(String resource, String body) {
         return post(resource, body, new HashMap<>());
     }
 
-    protected Response patch(String resource, String body){
+    protected Response patch(String resource, String body) {
         return patch(resource, body, new HashMap<>());
     }
 }

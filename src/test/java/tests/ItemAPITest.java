@@ -5,12 +5,14 @@ import api.LoginAPI;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dto.Item;
+import io.qameta.allure.Feature;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Feature("Items")
 public class ItemAPITest {
 
     private static final String TOKEN = LoginAPI.getToken();
